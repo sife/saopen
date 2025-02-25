@@ -7,18 +7,21 @@ from aiogram import Bot, Dispatcher
 TOKEN = "7897982272:AAGpCDtBrPzjsdT33i87dzdV1npd9lzuJM8"
 CHANNEL_ID = "@jordangold"
 
-# أوقات افتتاح وإغلاق الأسواق بالتوقيت العالمي (UTC)
+# أوقات افتتاح وإغلاق الأسواق بتوقيت الرياض (UTC+3)
 MARKET_SCHEDULE = {
-    "السوق الآسيوي": {"open": "23:00", "close": "07:00"},  # مثال: طوكيو
-    "سوق لندن": {"open": "08:00", "close": "16:00"},
-    "السوق الأمريكي": {"open": "14:30", "close": "21:00"}
+    "السوق الآسيوي": {"open": "05:00", "close": "10:00"},  # طوكيو
+    "سوق لندن": {"open": "11:00", "close": "19:00"},
+    "السوق الأمريكي": {"open": "17:30", "close": "00:00"}  # نيويورك
 }
+
+# ضبط التوقيت إلى الرياض
+RIYADH_TZ = pytz.timezone("Asia/Riyadh")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 def get_next_notification_time():
-    now_utc = datetime.datetime.now(pytz.utc).time()
+    now_riyadh = datetime.datetime.now(RIYADH_TZ).time()
     today = datetime.date.today()
     notifications = []
     
@@ -28,12 +31,12 @@ def get_next_notification_time():
         
         # تنبيه قبل الافتتاح بـ 5 دقائق
         open_alert = (datetime.datetime.combine(today, open_time) - datetime.timedelta(minutes=5)).time()
-        if now_utc < open_alert:
-            notifications.append((open_alert, f"📢 {market} سيفتتح بعد 5 دقائق!"))
+        if now_riyadh < open_alert:
+            notifications.append((open_alert, f"📢 {market} ستبدأ الجلسه بعد 5 دقائق!"))
         
         # تنبيه قبل الإغلاق بـ 5 دقائق
         close_alert = (datetime.datetime.combine(today, close_time) - datetime.timedelta(minutes=5)).time()
-        if now_utc < close_alert:
+        if now_riyadh < close_alert:
             notifications.append((close_alert, f"⚠️ {market} سيغلق بعد 5 دقائق!"))
     
     notifications.sort()  # ترتيب الإشعارات حسب التوقيت
@@ -44,7 +47,7 @@ async def send_notifications():
         next_notification = get_next_notification_time()
         if next_notification:
             notify_time, message = next_notification
-            now = datetime.datetime.now(pytz.utc).time()
+            now = datetime.datetime.now(RIYADH_TZ).time()
             wait_seconds = (datetime.datetime.combine(datetime.date.today(), notify_time) - 
                             datetime.datetime.combine(datetime.date.today(), now)).total_seconds()
             
