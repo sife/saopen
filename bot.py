@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 
 # بيانات البوت
 TOKEN = "7897982272:AAGpCDtBrPzjsdT33i87dzdV1npd9lzuJM8"
-CHANNEL_ID = "@testbotseaf"
+CHANNEL_ID = "@jordangold"
 
 # أوقات افتتاح وإغلاق الأسواق بالتوقيت العالمي (UTC)
 MARKET_SCHEDULE = {
