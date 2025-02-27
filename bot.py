@@ -4,7 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 
 TOKEN = "7897982272:AAGpCDtBrPzjsdT33i87dzdV1npd9lzuJM8"
-CHANNEL_ID = "@jordangold"
+CHANNEL_ID = "@testbotseaf"
 
 # أوقات افتتاح وإغلاق الأسواق بالتوقيت العالمي (UTC)
 MARKET_TIMES = {
@@ -18,16 +18,16 @@ dp = Dispatcher()
 
 async def send_alerts():
     while True:
-        now = datetime.datetime.utcnow()
+        now = datetime.datetime.now(datetime.UTC)
         current_time = (now.hour, now.minute)
         
         for market, times in MARKET_TIMES.items():
             if current_time == times["open"]:
-                await bot.send_message(CHANNEL_ID, f"🚀✨ قناة {market} سيفتتح بعد 10 دقائق! استعد 📊💰\n\n#SA_Forex")
+                await bot.send_message(CHANNEL_ID, f"🚀✨ سوق {market} سيفتتح بعد 10 دقائق! استعد 📊💰\n\n#SA_Forex")
             elif current_time == (times["close"][0] - 1, times["close"][1]):
-                await bot.send_message(CHANNEL_ID, f"⚠️🔔 تنبيه! قناة {market} سيغلق بعد 10 دقائق، تأكد من إنهاء صفقاتك! ⏳💼\n\n#SA_Forex")
+                await bot.send_message(CHANNEL_ID, f"⚠️🔔 تنبيه! سوق {market} سيغلق بعد 10 دقائق، تأكد من إنهاء صفقاتك! ⏳💼\n\n#SA_Forex")
             elif current_time == times["close"]:
-                await bot.send_message(CHANNEL_ID, f"🔴🚪 قناة {market} أغلق الآن، نراكم في الجلسة القادمة! 📉⏳\n\n#SA_Forex")
+                await bot.send_message(CHANNEL_ID, f"🔴🚪 سوق {market} أغلق الآن، نراكم في الجلسة القادمة! 📉⏳\n\n#SA_Forex")
                 
         await asyncio.sleep(60)  # فحص كل دقيقة
 
